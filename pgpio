@@ -2,7 +2,7 @@
 #
 # pgp.io CLI helper
 
-VERSION=0.1.0
+VERSION='0.1.0'
 
 if [ "$1" == "--help" ] || [ "$1" == "-h" ] ||
    [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
