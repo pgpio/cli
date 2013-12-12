@@ -17,7 +17,7 @@ while getopts ":hv" opt; do
       echo "Usage:"
       echo
       echo "  Encrypt & Send"
-      echo "  echo 'hello' | gpg -aesr '<recipient>' | pgpio"
+      echo "  echo 'hello' | gpg -aesr '<recipient>' | pgpio [ message ID ]"
       echo
       echo "  Receive & Decrypt"
       echo "  pgpio Jag61Hgz19L | gpg -d"
@@ -32,7 +32,7 @@ while getopts ":hv" opt; do
 done
 
 # Receive
-if [ $1 ]; then
+if [ -t 0 ]; then
   # Accept either a message ID or a full URL.
   if [ "${1:0:4}" == "http" ]; then
     url=$1
@@ -48,7 +48,14 @@ if [ $1 ]; then
   fi
 # Send
 else
-  result=`curl -sSfi --data-binary @- $ENDPOINT`
+  # Optionally take a message ID to write/append to.
+  if [ "$1" ]; then
+    url="$ENDPOINT/$1"
+  else
+    url=$ENDPOINT
+  fi
+
+  result=`curl -sSfi --data-binary @- $url`
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
