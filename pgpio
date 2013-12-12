@@ -31,13 +31,31 @@ while getopts ":hv" opt; do
   esac
 done
 
+# http://stackoverflow.com/questions/296536/urlencode-from-a-bash-script
+rawurlencode() {
+  local string="${1}"
+  local strlen=${#string}
+  local encoded=""
+
+  for (( pos=0 ; pos<strlen ; pos++ )); do
+    c=${string:$pos:1}
+    case "$c" in
+      [-_.~a-zA-Z0-9] ) o="${c}" ;;
+    * ) printf -v o '%%%02x' "'$c"
+  esac
+  encoded+="${o}";
+done
+echo "${encoded}"
+}
+
+
 # Receive
 if [ -t 0 ]; then
   # Accept either a message ID or a full URL.
   if [ "${1:0:4}" == "http" ]; then
     url=$1
   else
-    url="$ENDPOINT/$1?plain=1"
+    url="$ENDPOINT/$(rawurlencode "$1")?plain=1"
   fi
 
   result=`curl -sSL "$url"`
@@ -63,4 +81,3 @@ else
     echo "$location"
   fi
 fi
-
