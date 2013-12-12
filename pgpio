@@ -5,20 +5,34 @@
 VERSION='0.1.0'
 DOMAIN='https://pgp.io'
 
-if [ "$1" == "--help" ] || [ "$1" == "-h" ] ||
-   [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
-  echo "pgp.io CLI helper $VERSION"
-  echo
-  echo "Usage:"
-  echo
-  echo "  Encrypt & Send"
-  echo "  echo 'hello' | gpg -aesr '<recipient>' | pgpio"
-  echo
-  echo "  Receive & Decrypt"
-  echo "  pgpio https://pgp.io/m/Jag61Hgz19L | gpg -d"
-  echo
-  exit 0
-fi
+while getopts ":hv" opt; do
+  case $opt in
+    v)
+      echo "pgp.io CLI helper $VERSION"
+      exit 0
+      ;;
+    h)
+      echo "pgp.io CLI helper $VERSION"
+      echo
+      echo "Usage:"
+      echo
+      echo " -h : This help."
+      echo " -v : Return the current version."
+      echo
+      echo "  Encrypt & Send"
+      echo "  echo 'hello' | gpg -aesr '<recipient>' | pgpio"
+      echo
+      echo "  Receive & Decrypt"
+      echo "  pgpio Jag61Hgz19L | gpg -d"
+      echo
+      exit 0
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+  esac
+done
 
 # Receive
 if [ $1 ]; then
