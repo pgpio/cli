@@ -3,6 +3,7 @@
 # pgp.io CLI helper
 
 VERSION='0.1.0'
+DOMAIN='https://pgp.io'
 
 if [ "$1" == "--help" ] || [ "$1" == "-h" ] ||
    [ "$1" == "--version" ] || [ "$1" == "-v" ]; then
@@ -21,7 +22,7 @@ fi
 
 # Receive
 if [ $1 ]; then
-  result=`curl -sSL "$1"`
+  result=`curl -sSL "$DOMAIN/m/$1?plain=1"`
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
@@ -29,7 +30,7 @@ if [ $1 ]; then
   fi
 # Send
 else
-  result=`curl -sSfi --data-binary @- https://pgp.io/m/`
+  result=`curl -sSfi --data-binary @- $DOMAIN/m/`
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
