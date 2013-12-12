@@ -3,7 +3,7 @@
 # pgp.io CLI helper
 
 VERSION='0.1.0'
-DOMAIN='https://pgp.io'
+ENDPOINT='https://pgp.io/m'
 
 while getopts ":hv" opt; do
   case $opt in
@@ -15,9 +15,6 @@ while getopts ":hv" opt; do
       echo "pgp.io CLI helper $VERSION"
       echo
       echo "Usage:"
-      echo
-      echo " -h : This help."
-      echo " -v : Return the current version."
       echo
       echo "  Encrypt & Send"
       echo "  echo 'hello' | gpg -aesr '<recipient>' | pgpio"
@@ -36,7 +33,14 @@ done
 
 # Receive
 if [ $1 ]; then
-  result=`curl -sSL "$DOMAIN/m/$1?plain=1"`
+  # Accept either a message ID or a full URL.
+  if [ "${1:0:4}" == "http" ]; then
+    url=$1
+  else
+    url="$ENDPOINT/$1?plain=1"
+  fi
+
+  result=`curl -sSL "$url"`
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
@@ -44,7 +48,7 @@ if [ $1 ]; then
   fi
 # Send
 else
-  result=`curl -sSfi --data-binary @- $DOMAIN/m/`
+  result=`curl -sSfi --data-binary @- $ENDPOINT`
   RETVAL=$?
 
   if [ $RETVAL -eq 0 ]; then
