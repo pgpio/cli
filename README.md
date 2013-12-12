@@ -1,4 +1,8 @@
-cli
-===
+# pgp.io CLI helper
 
-Command-line helper
+## Encrypt & Send
+`echo 'hello' | gpg -aesr '<recipient>' | pgpio`
+
+## Receive & Decrypt
+`pgpio https://pgp.io/m/Jag61Hgz19L | gpg -d`
+
