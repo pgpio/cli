@@ -55,7 +55,7 @@ if [ -t 0 ]; then
   if [ "${1:0:4}" == "http" ]; then
     url=$1
   else
-    url="$ENDPOINT/$(rawurlencode "$1")?plain=1"
+    url="$ENDPOINT/$(rawurlencode "$1").txt"
   fi
 
   result=`curl -sSL "$url"`
